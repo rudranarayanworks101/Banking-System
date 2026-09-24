@@ -1,0 +1,186 @@
+<!--this is frontend i did using ai due to shortage of time and i want to use ai to make it look 
+better-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Banking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <h1>Banking System</h1>
+        <p class="subtitle">Simple & Secure Online Banking Portal</p>
+    </header>
+
+    <div class="container">
+
+        <!-- ================= AUTH VIEW (Login & Register) ================= -->
+        <section id="authSection" class="view-section">
+            
+            <!-- Navigation toggle buttons -->
+            <div class="tab-buttons">
+                <button id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button id="tabRegisterBtn" class="tab-btn" onclick="switchAuthTab('register')">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginCard" class="card">
+                <h2>Account Login</h2>
+                <div class="form-group">
+                    <label for="loginAccNum">Account Number</label>
+                    <input type="text" id="loginAccNum" placeholder="e.g. 123456" maxlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPin">4-Digit PIN</label>
+                    <input type="password" id="loginPin" placeholder="e.g. 1234" maxlength="4">
+                </div>
+
+                <button class="btn btn-primary" onclick="login()">Login</button>
+                
+                <p class="demo-note">
+                    <strong>Demo Account:</strong> Account No: <code>123456</code> | PIN: <code>1234</code>
+                </p>
+                <div id="loginMessage" class="message"></div>
+            </div>
+
+            <!-- Create Account Form -->
+            <div id="registerCard" class="card" style="display: none;">
+                <h2>Create New Account</h2>
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="regPhone">Phone Number (10 Digits)</label>
+                    <input type="text" id="regPhone" placeholder="Enter 10-digit number" maxlength="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="regPin">4-Digit PIN</label>
+                    <input type="password" id="regPin" placeholder="Enter 4-digit PIN" maxlength="4">
+                </div>
+
+                <div class="form-group">
+                    <label for="regConfirmPin">Confirm PIN</label>
+                    <input type="password" id="regConfirmPin" placeholder="Re-enter PIN" maxlength="4">
+                </div>
+
+                <button class="btn btn-success" onclick="createAccount()">Create Account</button>
+                <div id="registerMessage" class="message"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= DASHBOARD VIEW (Logged-in User) ================= -->
+        <section id="dashboardSection" class="view-section" style="display: none;">
+
+            <!-- User Welcome Banner -->
+            <div class="card user-banner">
+                <div class="user-info">
+                    <h2>Welcome, <span id="userName">User</span>!</h2>
+                    <p>Account Number: <strong id="userAccNum">------</strong></p>
+                    <p>Phone: <span id="userPhone">----------</span></p>
+                </div>
+                <div class="balance-badge">
+                    <span class="balance-title">Current Balance</span>
+                    <span class="balance-amount">Rs. <span id="userBalance">0.00</span></span>
+                </div>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Dashboard Action Grid -->
+            <div class="dashboard-grid">
+
+                <!-- 1. Check Balance -->
+                <div class="card action-card">
+                    <h3>1. Balance Enquiry</h3>
+                    <p>Quickly view your real-time available funds.</p>
+                    <button class="btn btn-outline" onclick="checkBalanceAlert()">View Balance</button>
+                </div>
+
+                <!-- 2. Deposit Money -->
+                <div class="card action-card">
+                    <h3>2. Deposit Money</h3>
+                    <div class="form-group">
+                        <label for="depositAmount">Amount (Rs.)</label>
+                        <input type="number" id="depositAmount" placeholder="Enter amount" min="1">
+                    </div>
+                    <button class="btn btn-primary" onclick="depositMoney()">Deposit</button>
+                </div>
+
+                <!-- 3. Withdraw Money -->
+                <div class="card action-card">
+                    <h3>3. Withdraw Money</h3>
+                    <div class="form-group">
+                        <label for="withdrawAmount">Amount (Rs.)</label>
+                        <input type="number" id="withdrawAmount" placeholder="Enter amount" min="1">
+                    </div>
+                    <button class="btn btn-warning" onclick="withdrawMoney()">Withdraw</button>
+                </div>
+
+                <!-- 4. Transfer Money -->
+                <div class="card action-card">
+                    <h3>4. Transfer Funds</h3>
+                    <div class="form-group">
+                        <label for="transferReceiver">Receiver Account No.</label>
+                        <input type="text" id="transferReceiver" placeholder="6-digit account no." maxlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="transferAmount">Amount (Rs.)</label>
+                        <input type="number" id="transferAmount" placeholder="Enter amount" min="1">
+                    </div>
+                    <button class="btn btn-info" onclick="transferMoney()">Transfer</button>
+                </div>
+
+                <!-- 5. Change PIN -->
+                <div class="card action-card">
+                    <h3>5. Change PIN</h3>
+                    <div class="form-group">
+                        <label for="oldPin">Old PIN</label>
+                        <input type="password" id="oldPin" placeholder="Old 4-digit PIN" maxlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPin">New PIN</label>
+                        <input type="password" id="newPin" placeholder="New 4-digit PIN" maxlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPin">Confirm New PIN</label>
+                        <input type="password" id="confirmNewPin" placeholder="Re-enter new PIN" maxlength="4">
+                    </div>
+                    <button class="btn btn-secondary" onclick="changePin()">Update PIN</button>
+                </div>
+
+            </div>
+
+            <!-- Global Operation Alert Box -->
+            <div id="dashboardMessage" class="message"></div>
+
+            <!-- 6. Transaction History -->
+            <div class="card history-card">
+                <div class="history-header">
+                    <h3>Transaction History</h3>
+                    <button class="btn btn-small" onclick="renderHistory()">Refresh History</button>
+                </div>
+                <div id="historyListContainer">
+                    <ul id="historyList" class="history-list">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Link the JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
